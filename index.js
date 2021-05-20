@@ -1,55 +1,53 @@
 function trimProperties(obj) {
-  const newObj = {...obj}
-  Object.keys(newObj).map(o => newObj[o] = newObj[o].trim())
-  return newObj
+  const result = {}
+  for (let prop in obj){
+    result[prop] = obj[prop].trim()
+  }
+  return result
 }
 
 function trimPropertiesMutation(obj) {
-  Object.keys(obj).forEach(o => {obj[o] = obj[o].trim()})
+  for (let prop in obj){
+    obj[prop] = obj[prop].trim()
+  }
   return obj
 }
 
 function findLargestInteger(integers) {
-  var highest = integers[0]
-  Object.keys(integers).map(int => {
-    if (integers[int].integer > highest.integer) {
-      highest = integers[int]
+  let result = integers[0].integer
+  for (let idx = 1; idx < integers.length; idx++){
+    if (integers[idx].integer>result) {
+      result = integers[idx].integer
     }
-  })
-  return highest.integer
+  }
+  return result
 }
 
 class Counter {
   constructor(initialNumber) {
-    this.number = initialNumber + 1
+    this.count = initialNumber
   }
 
   countDown() {
-    // ✨ implement
-    if (this.number > 0) {
-      this.number -= 1
-    } else {
-      this.number
-    }
-    return this.number
+    return this.count > 0 ? this.count-- : 0
   }
 }
 
 class Seasons {
   constructor() {
     this.seasons = ['summer', 'fall', 'winter', 'spring']
-    this.currentSeason = 'spring'
+    this.currentSeason = 0
   }
 
   next() {
-    let nextSeason = this.seasons.findIndex(foo => foo === this.currentSeason)
-
-    this.currentSeason = this.seasons[nextSeason + 1]
-    if(!this.currentSeason) {
-      this.currentSeason = 'summer'
+    const result = this.seasons[this.currentSeason]
+    if (this.currentSeason === 3) {
+    this.currentSeason = 0
+    } else {
+      ++this.currentSeason
     }
 
-    return this.currentSeason
+    return result
   }
 }
 
@@ -63,30 +61,27 @@ class Car {
   }
 
   drive(distance) {
-    if (((this.tank*this.mpg) - distance) >= 0) {
-        this.odometer = this.odometer + distance;
-        this.tank = ((this.tank*this.mpg) - distance)/this.mpg;
-        return this.odometer
-      } else {
-        distance = distance - (this.tank*this.mpg);
-        this.odometer = this.odometer + (this.tank*this.mpg);
-        this.tank = 0;
-        return (`ran out of after ${this.odometer} miles`);
-      }
+   const milesCanDrive = this.tank * this.mpg
+   if (distance <= milesCanDrive) {
+     this.odometer = this.odometer + distance 
+     this.tank = this.tank - (distance / this.mpg)
+     return this.odometer
+   } else {
+     this.odometer = this.odometer + milesCanDrive
+     this.tank = 0
+   }
+   return this.odometer
   }
 
   refuel(gallons) {
-    if(this.tank === this.tankSize) {
-      return this.tank
-    } else if ((this.tankSize - this.tank) < gallons) {
-      this.tank = this.tankSize
-    } else {
-      this.tank += this.tank + gallons
-    }
-    return this.tank
-  }
+   if (gallons <= this.tankSize - this.tank) {
+     this.tank = this.tank + gallons
+   } else {
+     this.tank = this.tankSize
+   }
+   return this.tank * this.mpg
 }
-
+}
 /**
  * [Exercise 7] Asynchronously resolves whether a number is even
  * @param {number} number - the number to test for evenness
@@ -106,16 +101,11 @@ class Car {
  *    // error.message is "number must be a number"
  * })
  */
-function isEvenNumberAsync(number) {
-  // ✨ implement
-  if (!number || typeof number !== "number") {
-    throw new Error(`number must be a number`)
+async function isEvenNumberAsync(number) {
+  if (typeof number !== "number" || isNaN(number)) {
+    throw new Error('number must be a number')
   }
-  if(number%2 === 0) {
-    return true
-  } else {
-    return false
-  }
+  return number % 2 === 0 || false
 }
 
 module.exports = {
